@@ -99,6 +99,7 @@ body {
     transition: 1s;
     display: flex;
     flex-direction: row;
+    align-items: stretch;
 }
 
 .topic:hover{
@@ -113,20 +114,30 @@ body {
     border-right: 1px solid #3a4359;
     padding: 5px;
     width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .topic-author {
     color: white;
     border-right: 1px solid #3a4359;
     padding: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .topic-date-of-creation {
     color: white;
     font-size: 10pt;
     border-right: 1px solid #3a4359;
-    padding: 5px
 
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .no-threads {
@@ -224,4 +235,113 @@ body {
     margin: 5px;
     background-color: #1f2430;
 
+}
+
+.topic-find {
+    background-color: #1f2430;
+    border-radius: 10px;
+    height: auto;
+    padding: 15px;
+    margin: 5px;
+    box-shadow: 0px 0px 5px #4d5875;
+    user-select: none;
+    transition: 1s;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.topic-find-head {
+    color: white;
+    font-size: 15pt;
+    border: 1px solid #3a4359;
+    padding: 5px;
+    display: flex;
+    margin-left: 15px;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 10px;
+    transition: 1s;
+}
+
+.input-topic-name-find {
+    color: white;
+    margin: 5px;
+    background-color: #1f2430;
+    border-radius: 10px;
+}
+
+.topic-find-author {
+    color: white;
+    font-size: 15pt;
+    border: 1px solid #3a4359;
+    padding: 5px;
+    margin-left: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 10px;
+    transition: 1s;
+}
+.input-topic-author-find {
+    color: white;
+    margin: 5px;
+    background-color: #1f2430;
+    border-radius: 10px;
+}
+
+.topic-find-date {
+    color: white;
+    font-size: 15pt;
+    border: 1px solid #3a4359;
+    padding: 5px;
+    margin-left: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 10px;
+    transition: 1s;
+}
+
+
+.input-topic-date-find {
+    color: white;
+    margin: 5px;
+    background-color: #1f2430;
+    border-radius: 10px;
+}
+
+.topic-find-submit-button {
+    color: white;
+    margin: 5px;
+    background-color: #1f2430;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.topic-find-submit {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.topic-find-count {
+    color: white;
+    font-size: 15pt;
+    border: 1px solid #3a4359;
+    padding: 5px;
+    margin-left: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 10px;
+    transition: 1s;
+}
+
+.input-topic-count-find {
+    color: white;
+    margin: 5px;
+    background-color: #1f2430;
+    border-radius: 10px;
+    padding: 5px;
 }
