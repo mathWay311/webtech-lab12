@@ -114,31 +114,7 @@ function jumpTo(idTopicGroup) {
 
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            const topics = JSON.parse(this.responseText);
-
-            let renderedHTML = "";
-
-            topics.forEach((topic) => {
-                console.log(topic);
-                renderedHTML += `
-                    <div class='topic' onclick=openTopic('${topic.ID_TOPIC}')>
-
-                        <div class='topic-head'>
-                            ${topic.TOPIC_NAME}
-                        </div>
-                        <div class='topic-author'>
-                             Автор: ${topic.PSEUDONAME}
-                             <img width=50 height=50 src="action/template/avatar.php?user='${topic.AUTHOR_ID}'">
-                        </div>
-                        <div class='topic-date-of-creation'>
-                            Создана: ${topic.CREATION_DATE}
-                        </div>
-                    </div>
-                `
-            });
-            if (topics.length == 0) {
-                renderedHTML = "<a class='no-threads'>Нет сообщений по теме</a>";
-            }
+            let renderedHTML = this.responseText;
 
             $("#topics-container").html("");
             $("#topics-container").append(renderedHTML);
@@ -149,7 +125,7 @@ function jumpTo(idTopicGroup) {
     localStorage.setItem('topicGroup', idTopicGroup);
 
     xmlhttp.open("GET", "action/show_topics.php?idtopicgroup=" + idTopicGroup, true);
-    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlhttp.setRequestHeader("Content-Type", "text/html;charset=UTF-8");
     xmlhttp.send();
 
 }
@@ -220,6 +196,18 @@ function deleteMsg(idMessage) {
         }
     };
     xmlhttp.open("GET", "action/delete_message.php?idMessage=" + idMessage, true);
+    xmlhttp.send();
+}
+
+function deleteTopic(idTopic) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            const topicGroupId = localStorage.getItem("topicGroup");
+            jumpTo(topicGroupId);
+        }
+    };
+    xmlhttp.open("GET", "action/delete_topic.php?idTopic=" + idTopic, true);
     xmlhttp.send();
 }
 

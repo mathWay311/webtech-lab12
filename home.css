@@ -365,3 +365,32 @@ body {
     width: 100px;
     transition: 1s;
 }
+
+.delete-topic-button {
+    background-color: #ff8888;
+    color: white;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 10px;
+    width: 150px;
+    transition: 1s;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+}
+
+.delete-topic-button:hover{
+    background-color: #ffcccc;
+    color: white;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 10px;
+    width: 150px;
+    transition: 1s;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

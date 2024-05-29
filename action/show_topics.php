@@ -1,5 +1,7 @@
 <?php
     require_once '../include/connect.php';
+    require_once './fetch_auth_role.php';
+
     $id_topic_gr = $_REQUEST["idtopicgroup"];
     $query = "
     SELECT topic.ID_TOPIC,
@@ -18,7 +20,30 @@
     $topics = mysqli_query($connect, $query);
     $arr = mysqli_fetch_all($topics, MYSQLI_ASSOC);
 
+    $htmlString = ''; // Переменная для хранения HTML-строки
 
-    echo json_encode($arr);
+    foreach ($arr as $topic) {
+        $htmlString .= "
+        <div class='topic' onclick=openTopic('{$topic['ID_TOPIC']}')>
+            <div class='topic-head'>
+                {$topic['TOPIC_NAME']}
+            </div>
+            <div class='topic-author'>
+                Автор: {$topic['PSEUDONAME']}
+                <img width=50 height=50 src='action/template/avatar.php?user={$topic['AUTHOR_ID']}'>
+            </div>
+            <div class='topic-date-of-creation'>
+                Создана: {$topic['CREATION_DATE']}
+            </div>
+
+        ";
+        if (boolval($user_role['CAN_DELETE_TOPICS_OR_MESSAGES'])) {
+            $htmlString .= "<div class='delete-topic-button' onclick='deleteTopic({$topic['ID_TOPIC']})'>Удалить тему</div>";
+        }
+        $htmlString .= "</div>";
+    }
+
+    echo $htmlString;
+
 ?>
 
