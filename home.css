@@ -394,3 +394,54 @@ body {
     flex-direction: row;
     align-items: center;
 }
+
+.topic-post {
+    background-color: #1f2430;
+    border-radius: 10px;
+    height: auto;
+    padding: 15px;
+    margin: 5px;
+    box-shadow: 0px 0px 5px #4d5875;
+    user-select: none;
+    transition: 1s;
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.topic-post-label {
+    color: white;
+    margin: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.topic-post-name {
+    color: white;
+    margin: 5px;
+}
+
+.input-topic-post-name {
+    color: white;
+    margin: 5px;
+    background-color: #1f2430;
+    border-radius: 10px;
+
+}
+
+.topic-post-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.topic-post-submit-button {
+    color: white;
+    margin: 5px;
+    background-color: #1f2430;
+    border-radius: 10px;
+    padding: 5px;
+}

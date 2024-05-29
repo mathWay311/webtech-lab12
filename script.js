@@ -77,11 +77,49 @@ function findTopicSubmit(idTopicGroup){
     xmlhttp.send();
 }
 
+function createNewTopic(idTopicGroup) {
+    if (sessionStorage['user'] == undefined) {
+        alert("Создавать темы могут только авторизованные пользователи!");
+        return;
+    }
+
+    var xmlhttp = new XMLHttpRequest();
+
+    const name =    $("#topic-post-name").val();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            jumpTo(idTopicGroup);
+            console.log(this.responseText);
+        }
+    };
+
+    var form = new FormData();
+    form.append("id_topic_group", idTopicGroup);
+    form.append("name", name);
+
+    xmlhttp.open("POST", "action/post_topic.php", true);
+
+    xmlhttp.send(form);
+}
+
 // Рендер тем по группе тем
 function jumpTo(idTopicGroup) {
     $("#searchbar").html("");
     var xmlhttp = new XMLHttpRequest();
     const htmlMessagePost = `
+    <div class="topic-post">
+        <div class='topic-post-label'>
+            Добавьте новое обсуждение!
+        </div>
+        <div class='topic-post-name'>
+            Название темы:
+            <input style='width:300px' class="input-topic-post-name" type="text" id="topic-post-name"></input>
+        </div>
+        <div class='topic-post-button'>
+            <button onclick="createNewTopic(${idTopicGroup})" class="topic-post-submit-button">Создать</button>
+        </div>
+    </div>
     <div class="topic-find">
         <div class='topic-find-head'>
             Название:
