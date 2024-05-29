@@ -16,11 +16,101 @@ function restoreCurrentPage() {
 
 }
 restoreCurrentPage();
-// <--- �������������� ������ --->
+// <---Восстановление сессии--->
 
+function findTopicSubmit(idTopicGroup){
+    var xmlhttp = new XMLHttpRequest();
+    const topicName = $("#find-topic-name").val();
+    const topicAuthorName = $("#find-topic-author").val();
+    const dateOrder = $("#topic-find-date-select").val();
+    const limit = $("#find-topic-count").val();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            const topics = JSON.parse(this.responseText);
+
+            let renderedHTML = "";
+
+            topics.forEach((topic) => {
+                console.log(topic);
+                renderedHTML += `
+                <div class='topic' onclick=openTopic('${topic.ID_TOPIC}')>
+
+                <div class='topic-head'>
+                    ${topic.TOPIC_NAME}
+                </div>
+                <div class='topic-author'>
+                    Автор: ${topic.PSEUDONAME}
+                    <img width=50 height=50 src="action/template/avatar.php?user='${topic.AUTHOR_ID}'">
+                </div>
+                    <div class='topic-date-of-creation'>
+                        Создана: ${topic.CREATION_DATE}
+                    </div>
+                </div>
+                `
+            });
+            if (topics.length == 0) {
+                renderedHTML = "<a class='no-threads'>С текущими фильтрами ничего не найдено</a>";
+            }
+
+            $("#topics-container").html("");
+            $("#topics-container").append(renderedHTML);
+        }
+    };
+    var orderByQuery = "ORDER BY RAND()";
+
+    if (dateOrder == "new-first") {
+        orderByQuery = "ORDER BY topic.CREATION_DATE DESC";
+    }
+    else if (dateOrder == "old-first") {
+        orderByQuery = "ORDER BY topic.CREATION_DATE ASC"
+    }
+
+    xmlhttp.open("GET", "action/find_topics.php?idtopicgroup=" + idTopicGroup +
+                                                "&topicName=" + topicName +
+                                                "&topicAuthor=" + topicAuthorName +
+                                                "&topicOrder=" + orderByQuery +
+                                                "&topicLimit=" + limit,
+                 true);
+
+    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlhttp.send();
+}
+
+// Рендер тем по группе тем
 function jumpTo(idTopicGroup) {
     $("#searchbar").html("");
     var xmlhttp = new XMLHttpRequest();
+    const htmlMessagePost = `
+    <div class="topic-find">
+        <div class='topic-find-head'>
+            Название:
+            <input class="input-topic-name-find" type="text" id="find-topic-name"></input>
+        </div>
+        <div class='topic-find-author'>
+            Автор:
+            <input class="input-topic-author-find" type="text" id="find-topic-author"></input>
+        </div>
+        <div class='topic-find-date'>
+            Дата создания:
+            <select name="topic-find-date-select" id="topic-find-date-select" class="input-topic-date-find">
+                <option value="new-first" selected >Сначала новые</option>
+                <option value="old-first">Сначала старые</option>
+                <option value="any">Неважно</option>
+            </select>
+        </div>
+        <div class='topic-find-count'>
+            Показать:
+            <input class="input-topic-count-find" type="number" id="find-topic-count" value=20></input>
+        </div>
+        <div class='topic-find-submit'>
+            <button onclick="findTopicSubmit(${idTopicGroup})" class="topic-find-submit-button">Найти темы</button>
+        </div>
+    </div>
+    `;
+
+    $("#searchbar").html("");
+    $("#searchbar").append(htmlMessagePost);
 
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -32,10 +122,13 @@ function jumpTo(idTopicGroup) {
                 console.log(topic);
                 renderedHTML += `
                     <div class='topic' onclick=openTopic('${topic.ID_TOPIC}')>
+
                         <div class='topic-head'>
                             ${topic.TOPIC_NAME}
                         </div>
                         <div class='topic-author'>
+                             Автор: ${topic.PSEUDONAME}
+                             <img width=50 height=50 src="action/template/avatar.php?user='${topic.AUTHOR_ID}'">
                         </div>
                         <div class='topic-date-of-creation'>
                             Создана: ${topic.CREATION_DATE}
@@ -44,7 +137,7 @@ function jumpTo(idTopicGroup) {
                 `
             });
             if (topics.length == 0) {
-                renderedHTML = "<a class='no-threads'>Увы... Пока ничего нет</a>";
+                renderedHTML = "<a class='no-threads'>Нет сообщений по теме</a>";
             }
 
             $("#topics-container").html("");
@@ -62,6 +155,10 @@ function jumpTo(idTopicGroup) {
 }
 
 function postMessage(idTopic) {
+    if (sessionStorage['user'] == undefined) {
+        alert("Оставлять сообщения могут только авторизованные пользователи!");
+        return;
+    }
 
     var xmlhttp = new XMLHttpRequest();
 
@@ -122,7 +219,7 @@ function openTopic(idTopic) {
             });
 
             if (messages.length == 0) {
-                renderedHTML = "<a class='no-threads'>Пока нет сообщений. Станьте первым!</a>";
+                renderedHTML = "<a class='no-threads'>Пока ничего нет.</a>";
             }
 
 
@@ -155,16 +252,16 @@ function logout() {
         if (this.readyState == 4 && this.status == 200) {
             var login_form = `
             <div class="auth-mini-window">
-            <div class="no-auth">
-            <a>Вы не авторизованы</a>
+                <div class="no-auth">
+                <a>Вы не авторизованы</a>
             </div>
-            <label class="auth-labels" for="login">Логин:</label>
-            <input class="auth-field" type="text" id="login" name="login" />
-            <label class="auth-labels" for="password">Пароль:</label>
-            <input class="auth-field" type="password" id="password" name="password" />
-            <button onclick="signin()">Войти</button>
-            <button onclick="signup_open()">Регистрация</button>
-            <button onclick="recover_password_open()">Забыли пароль?</button>
+                <label class="auth-labels" for="login">Логин:</label>
+                <input class="auth-field" type="text" id="login" name="login" />
+                <label class="auth-labels" for="password">Пароль:</label>
+                <input class="auth-field" type="password" id="password" name="password" />
+                <button onclick="signin()">Авторизация</button>
+                <button onclick="signup_open()">Регистрация</button>
+                <button onclick="recover_password_open()">Восстановление пароля</button>
             </div>`;
 
             $("#auth-status").html("");
@@ -189,8 +286,8 @@ function signin() {
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             const answer = JSON.parse(this.responseText);
+
             if (answer.AUTH_STATUS == true) {
-                console.log("Авторизация завершена");
                 fetch_user();
 
                 const name = answer.PSEUDONAME;
@@ -199,14 +296,11 @@ function signin() {
                 <div class="auth-mini-window">
                     <a href=''><img src="action/template/avatar.php?user='${answer.ID_USER}'"></a>
                     <a>Добро пожаловать, ${name} </a>
-                    <button onclick='logout()'>Выйти</button>
+                    <button onclick='logout()'>Выход</button>
                 </div>'`;
 
                 $("#auth-status").html("");
                 $("#auth-status").append(register_form);
-            }
-            else {
-                console.log("Авторизация безуспешна");
             }
         }
     };
@@ -233,10 +327,10 @@ function signup_open() {
         <label class="auth-labels" for="email">E-Mail:</label>
         <input class="auth-field" type="email" id="email" name="email" />
 
-        <label class="auth-labels" for="pseudoname">Ник (отображается на сайте):</label>
+        <label class="auth-labels" for="pseudoname">Псевдоним(отображаемое имя):</label>
         <input class="auth-field" type="text" id="pseudoname" name="pseudoname" />
 
-        <label class="auth-labels" for="avatar">Аватар:</label>
+        <label class="auth-labels" for="avatar">Загрузите аватар:</label>
         <input type="file" name="avatar" id="avatar"/>
 
         <button onclick="signup()">Зарегистрироваться</button>
@@ -254,7 +348,7 @@ function recover_password_open() {
         <label class="auth-labels" for="email">E-Mail:</label>
         <input class="auth-field" type="email" id="email" name="email" />
 
-    <button onclick="recover_password()">Восстановить</button>
+    <button onclick="recover_password()">Восстановить пароль</button>
     </div>'`;
 
 
