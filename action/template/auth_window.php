@@ -18,12 +18,18 @@
         </div>';
     }
     else {
-        echo "
-        <div class='auth-mini-window'>
-            <a href=''><img src='action/template/avatar.php?user={$_SESSION['user']['ID_USER']}'></a>
-            <a>Добро пожаловать, {$_SESSION['user']['PSEUDONAME']} </a>
-            <a>Ваша роль: {$user_role['NAME']} </a>
-            <button onclick='logout()'>Выйти</button>
-        </div>";
+        $htmlString = "<div class='auth-mini-window'>
+        <a href=''><img src='action/template/avatar.php?user={$_SESSION['user']['ID_USER']}'></a>
+        <a>Добро пожаловать, {$_SESSION['user']['PSEUDONAME']} </a>
+        <a>Ваша роль: {$user_role['NAME']} </a>";
+
+
+
+        if (boolval($user_role['CAN_POST_TOPIC_GROUPS'])) {
+            $htmlString .= "<button onclick='openTopicGroupEditPanel()'>Редактировать форумы</button>";
+        }
+
+        $htmlString .= "<button onclick='logout()'>Выйти</button></div>";
+        echo $htmlString;
     }
 ?>

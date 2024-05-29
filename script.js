@@ -103,6 +103,74 @@ function createNewTopic(idTopicGroup) {
     xmlhttp.send(form);
 }
 
+function deleteTopicGroup(idTopicGroup) {
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            openTopicGroupEditPanel()
+        }
+    };
+
+    xmlhttp.open("GET", "action/delete_topic_group.php?idTopicGroup=" + idTopicGroup, true);
+    xmlhttp.send();
+}
+
+function openTopicGroupEditPanel() {
+    $("#searchbar").html("");
+
+    const htmlMessagePost = `
+        <div class="msg-form">
+            <label class="msg-label" for="msg">Название нового форума:</label><br>
+            <input class="msg-area" type="text" id="topic-group-name-input"></input><br>
+            <button onclick="createTopicGroup()">Создать</button>
+        </div>
+    `;
+
+    $("#searchbar").append(htmlMessagePost);
+
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let renderedHTML = this.responseText;
+
+            $("#topics-container").html("");
+            $("#topics-container").append(renderedHTML);
+        }
+    };
+
+    xmlhttp.open("GET", "action/show_topic_groups_for_delete.php", true);
+    xmlhttp.setRequestHeader("Content-Type", "text/html;charset=UTF-8");
+    xmlhttp.send();
+}
+
+
+function createTopicGroup() {
+    if (sessionStorage['user'] == undefined) {
+        alert("Создавать форумы могут только авторизованные пользователи!");
+        return;
+    }
+
+    var xmlhttp = new XMLHttpRequest();
+
+    const name = $("#topic-group-name-input").val();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            openTopicGroupEditPanel();
+        }
+    };
+
+    var form = new FormData();
+    form.append("name", name);
+    console.log(form);
+
+    xmlhttp.open("POST", "action/create_topic_group.php", true);
+
+    xmlhttp.send(form);
+}
+
 // Рендер тем по группе тем
 function jumpTo(idTopicGroup) {
     $("#searchbar").html("");
