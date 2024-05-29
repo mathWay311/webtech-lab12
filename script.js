@@ -145,6 +145,48 @@ function openTopicGroupEditPanel() {
     xmlhttp.send();
 }
 
+function promoteUser() {
+    var xmlhttp = new XMLHttpRequest();
+
+    const pseudoname =          $("#user_pseudo").val();
+    const role_id =             $("#role-select").val();
+
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+                alert('Запрос завершён!');
+            }
+    };
+
+    var form = new FormData();
+    form.append("pseudoname", pseudoname);
+    form.append("role_id", role_id);
+
+    xmlhttp.open("POST", "action/promote_user.php", true);
+
+    xmlhttp.send(form);
+}
+
+function openPrivilegePanel() {
+    $("#searchbar").html("");
+
+
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let renderedHTML = this.responseText;
+
+            $("#searchbar").append(renderedHTML);
+        }
+    };
+
+    xmlhttp.open("GET", "action/template/privilege_panel.php", true);
+    xmlhttp.setRequestHeader("Content-Type", "text/html;charset=UTF-8");
+    xmlhttp.send();
+}
+
 
 function createTopicGroup() {
     if (sessionStorage['user'] == undefined) {

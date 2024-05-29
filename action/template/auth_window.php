@@ -29,6 +29,10 @@
             $htmlString .= "<button onclick='openTopicGroupEditPanel()'>Редактировать форумы</button>";
         }
 
+        if (boolval($user_role['CAN_PROMOTE_USERS'])) {
+            $htmlString .= "<button onclick='openPrivilegePanel()'>Выдать привилегии</button>";
+        }
+
         $htmlString .= "<button onclick='logout()'>Выйти</button></div>";
         echo $htmlString;
     }
