@@ -345,3 +345,23 @@ body {
     border-radius: 10px;
     padding: 5px;
 }
+
+.delete-msg-button {
+    background-color: #ff8888;
+    color: white;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 10px;
+    width: 100px;
+    transition: 1s;
+}
+
+.delete-msg-button:hover{
+    background-color: #ffcccc;
+    color: white;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 10px;
+    width: 100px;
+    transition: 1s;
+}

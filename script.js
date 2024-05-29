@@ -197,43 +197,32 @@ function openTopic(idTopic) {
 
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            const messages = JSON.parse(this.responseText);
-            console.log(messages);
-            let renderedHTML = "";
-
-            messages.forEach((msg) => {
-                renderedHTML += `
-                <div class='message')>
-                    <a><img src="action/template/avatar.php?user='${msg.ID_USER}'"></a>
-                    <div class='message-author' style='color:${msg.UNIQUE_COLOR}'>
-                        ${msg.NAME} ${msg.PSEUDONAME}
-                    </div>
-                    <div class='message-date'>
-                        оставил сообщение в ${msg.PUBLISH_DATE}
-                    </div>
-                    <div class='message-content'>
-                        ${msg.CONTENT}
-                    </div>
-                </div>
-                `
-            });
-
-            if (messages.length == 0) {
-                renderedHTML = "<a class='no-threads'>Пока ничего нет.</a>";
-            }
-
+            const htmlResponse = this.responseText;
 
             $("#topics-container").html("");
-            $("#topics-container").append(renderedHTML);
+            $("#topics-container").append(htmlResponse);
         }
     };
 
     xmlhttp.open("GET", "action/open_topic.php?idtopic=" + idTopic, true);
     localStorage.setItem('topic', idTopic);
-    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlhttp.setRequestHeader("Content-Type", "text/html;charset=UTF-8");
     xmlhttp.send();
 
 }
+
+function deleteMsg(idMessage) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            const topicId = localStorage.getItem("topic");
+            openTopic(topicId);
+        }
+    };
+    xmlhttp.open("GET", "action/delete_message.php?idMessage=" + idMessage, true);
+    xmlhttp.send();
+}
+
 function fetch_user() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
