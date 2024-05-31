@@ -384,24 +384,14 @@ function logout() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            var login_form = `
-            <div class="auth-mini-window">
-                <div class="no-auth">
-                <a>Вы не авторизованы</a>
-            </div>
-                <label class="auth-labels" for="login">Логин:</label>
-                <input class="auth-field" type="text" id="login" name="login" />
-                <label class="auth-labels" for="password">Пароль:</label>
-                <input class="auth-field" type="password" id="password" name="password" />
-                <button onclick="signin()">Авторизация</button>
-                <button onclick="signup_open()">Регистрация</button>
-                <button onclick="recover_password_open()">Восстановление пароля</button>
-            </div>`;
+            var htmlResponse = this.responseText;
 
             $("#auth-status").html("");
-            $("#auth-status").append(login_form);
-            sessionStorage.removeItem('user');
-            $("#topics-container").html("");
+            $("#auth-status").append(htmlResponse);
+
+            sessionStorage.removeItem('user');  // Убираем пользователя из сессионого хранилища
+
+            $("#topics-container").html("");    // Очищаем интерфейс
             $("#searchbar").html("");
         }
     };
@@ -419,23 +409,10 @@ function signin() {
 
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            const answer = JSON.parse(this.responseText);
-
-            if (answer.AUTH_STATUS == true) {
-                fetch_user();
-
-                const name = answer.PSEUDONAME;
-
-                var register_form = `
-                <div class="auth-mini-window">
-                    <a href=''><img src="action/template/avatar.php?user='${answer.ID_USER}'"></a>
-                    <a>Добро пожаловать, ${name} </a>
-                    <button onclick='logout()'>Выход</button>
-                </div>'`;
-
-                //$("#auth-status").html("");
-                //$("#auth-status").append(register_form);
-            }
+            const answer = this.responseText ;
+            fetch_user();
+            $("#auth-status").html("");
+            $("#auth-status").append(answer);
         }
     };
 

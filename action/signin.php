@@ -2,6 +2,7 @@
     session_start();
     require_once '../include/connect.php';
 
+
     $login = $_POST['login'];
     $password = md5($_POST['pass']);
 
@@ -26,16 +27,13 @@
             "PSEUDONAME" => $user['PSEUDONAME'],
             "ID_USER" => $user['ID_USER']
         ];
-        echo json_encode($answer);
+        //echo json_encode($answer);
     }
     else {
-        $answer = [
-            "AUTH_STATUS" => false,
-            "MESSAGE" => "Не удалось авторизоваться"
-        ];
-        echo json_encode($answer);
+        $_SESSION['MESSAGE'] = "Неверный логин или пароль";
     }
 
-    //echo json_encode($password);
+    include './fetch_auth_role.php';
+    include './template/auth_window.php';
 
 ?>
