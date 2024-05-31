@@ -2,18 +2,20 @@ function restoreCurrentPage() {
     const topicGroup = localStorage.getItem('topicGroup');
     const topic = localStorage.getItem('topic');
 
-    if (topicGroup == undefined && topic == undefined) {
-        return;
+    switch(localStorage.getItem('currentTab')) {
+        case "admin-promote":
+            openPrivilegePanel();
+            break;
+        case "admin-topic-groups":
+            openTopicGroupEditPanel();
+            break;
+        case "topics":
+            jumpTo(localStorage.getItem("topicGroup"));
+            break;
+        case "messages":
+            openTopic(localStorage.getItem("topic"));
+            break;
     }
-
-    else if (topicGroup != undefined && topic == undefined) {
-        jumpTo(topicGroup);
-    }
-
-    else {
-        openTopic(topic);
-    }
-
 }
 restoreCurrentPage();
 // <---Восстановление сессии--->
@@ -140,6 +142,8 @@ function openTopicGroupEditPanel() {
         }
     };
 
+    localStorage.setItem("currentTab", "admin-topic-groups");
+
     xmlhttp.open("GET", "action/show_topic_groups_for_delete.php", true);
     xmlhttp.setRequestHeader("Content-Type", "text/html;charset=UTF-8");
     xmlhttp.send();
@@ -170,7 +174,7 @@ function promoteUser() {
 
 function openPrivilegePanel() {
     $("#searchbar").html("");
-
+    $("#topics-container").html("");
 
     var xmlhttp = new XMLHttpRequest();
 
@@ -181,6 +185,8 @@ function openPrivilegePanel() {
             $("#searchbar").append(renderedHTML);
         }
     };
+
+    localStorage.setItem("currentTab", "admin-promote");
 
     xmlhttp.open("GET", "action/template/privilege_panel.php", true);
     xmlhttp.setRequestHeader("Content-Type", "text/html;charset=UTF-8");
@@ -271,6 +277,7 @@ function jumpTo(idTopicGroup) {
 
     localStorage.removeItem('topic');
     localStorage.setItem('topicGroup', idTopicGroup);
+    localStorage.setItem('currentTab', "topics");
 
     xmlhttp.open("GET", "action/show_topics.php?idtopicgroup=" + idTopicGroup, true);
     xmlhttp.setRequestHeader("Content-Type", "text/html;charset=UTF-8");
@@ -330,6 +337,8 @@ function openTopic(idTopic) {
 
     xmlhttp.open("GET", "action/open_topic.php?idtopic=" + idTopic, true);
     localStorage.setItem('topic', idTopic);
+    localStorage.setItem('currentTab', "messages");
+
     xmlhttp.setRequestHeader("Content-Type", "text/html;charset=UTF-8");
     xmlhttp.send();
 
@@ -424,8 +433,8 @@ function signin() {
                     <button onclick='logout()'>Выход</button>
                 </div>'`;
 
-                $("#auth-status").html("");
-                $("#auth-status").append(register_form);
+                //$("#auth-status").html("");
+                //$("#auth-status").append(register_form);
             }
         }
     };
