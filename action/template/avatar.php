@@ -8,6 +8,10 @@
 
     if (mysqli_num_rows($user) > 0) {
         $user_data = mysqli_fetch_assoc($user);
+
+        $role = mysqli_query($connect, "SELECT * FROM `role` WHERE ID_ROLE = '{$user_data['ID_ROLE']}' ");
+        $role_data = mysqli_fetch_assoc($role);
+
         $ava_path = "../" . $user_data['AVATAR_PATH'];  //. $user_data['AVATAR_PATH'];
         if (file_exists($ava_path)) {
             $src_im = imagecreatefromjpeg($ava_path); // создаем новый файл (без измены исходной)
@@ -43,7 +47,7 @@
                                $width, $height);
 
             // создаём водяной знак
-            $stamp = imagecreatefrompng('images/watermark.png');
+            $stamp = imagecreatefrompng("images/{$role_data['WATERMARK_NAME']}.png");
 
             // получаем значения высоты и ширины водяного знака
             $marge_right = 0;
