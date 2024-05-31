@@ -2,6 +2,13 @@
 
     session_start();
     require_once '../include/connect.php';
+    include './fetch_auth_role.php';
+
+    if (!boolval($user_role['CAN_POST_MESSAGES'])){
+        echo "BANNED";
+        return;
+    }
+
 
     $id_topic = $_POST['id_topic'];
     $msg = $_POST['message'];
@@ -17,4 +24,4 @@
     (`ID_MESSAGE`, `ID_TOPIC`, `ID_USER`, `SEQ_NUMBER`, `PUBLISH_DATE`, `CONTENT`, `IS_IMAGE`, `IMAGE_PATH`)
     VALUES
     (NULL, '{$id_topic}', '{$id_user}', '{$max_id}', NOW(), '{$msg}', '0', '0') ");
-
+    echo "SUCCESS";

@@ -91,8 +91,15 @@ function createNewTopic(idTopicGroup) {
 
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            jumpTo(idTopicGroup);
-            console.log(this.responseText);
+            switch (this.responseText) {
+                case "SUCCESS":
+                    jumpTo(idTopicGroup);
+                    break;
+                case "BANNED":
+                    const banMessage = "Вы забанены, свяжитесь с администратором, если считаете, что это ошибка: admin@coderum.ru";
+                    alert(banMessage);
+                    break;
+            }
         }
     };
 
@@ -159,8 +166,18 @@ function promoteUser() {
 
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-                alert('Запрос завершён!');
+            switch(this.responseText) {
+                case "NO_AUTH":
+                    alert("Вы не авторизованы");
+                    break;
+                case "SUCCESS":
+                    alert("Привилегии выданы.");
+                    break;
+                case "NO_USER":
+                    alert("Пользователя с таким псевдонимом не существует");
+                    break;
             }
+        }
     };
 
     var form = new FormData();
@@ -297,9 +314,19 @@ function postMessage(idTopic) {
 
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            openTopic(idTopic);
-            console.log(this.responseText);
-            window.scrollTo(0, document.body.scrollHeight);
+            const answer = this.responseText;
+            switch (answer) {
+                case "SUCCESS":
+                    openTopic(idTopic);
+                    console.log(this.responseText);
+                    window.scrollTo(0, document.body.scrollHeight);
+                    break;
+                case "BANNED":
+                    const banMessage = "Вы забанены, свяжитесь с администратором, если считаете, что это ошибка: admin@coderum.ru";
+                    alert(banMessage);
+                    break;
+            }
+
         }
     };
 
