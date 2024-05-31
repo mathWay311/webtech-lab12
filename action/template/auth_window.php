@@ -41,6 +41,11 @@
             $htmlString .= "<button onclick='openPrivilegePanel()'>Выдать привилегии</button>";
         }
 
+        if (boolval($user_role['CAN_UPLOAD_XML'])) {
+            $htmlString .= "<button onclick='openUploadXMLPanel()'>Добавить пользователей</button>";
+        }
+
+
         $htmlString .= "<button onclick='logout()'>Выйти</button></div>";
         echo $htmlString;
     }

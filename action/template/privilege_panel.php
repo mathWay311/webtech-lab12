@@ -1,5 +1,5 @@
 <?php
-    include './action/fetch_auth_role.php';
+    include '../action/fetch_auth_role.php';
     require_once '../../include/connect.php';
 
     session_start();

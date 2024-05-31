@@ -15,6 +15,9 @@ function restoreCurrentPage() {
         case "messages":
             openTopic(localStorage.getItem("topic"));
             break;
+        case "xml":
+            openUploadXMLPanel();
+            break;
     }
 }
 restoreCurrentPage();
@@ -209,7 +212,57 @@ function openPrivilegePanel() {
     xmlhttp.setRequestHeader("Content-Type", "text/html;charset=UTF-8");
     xmlhttp.send();
 }
+function upload_xml() {
 
+    const file_field = document.querySelector('#xmlfile');
+
+    const file =            file_field.files[0];
+
+
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+            switch(this.responseText) {
+                case "SUCCESS":
+                    alert("Успешно добавлены все записи");
+                    break;
+                case "ERRORS":
+                    alert("Внимание! Некоторые записи не были добавлены");
+                    break;
+            }
+        }
+    };
+
+
+    var form = new FormData();
+    form.append("file", file);
+
+    xmlhttp.open("POST", "action/append_users_from_xml.php", true);
+
+    xmlhttp.send(form);
+}
+
+function openUploadXMLPanel() {
+    $("#searchbar").html("");
+    $("#topics-container").html("");
+
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let renderedHTML = this.responseText;
+            $("#searchbar").append(renderedHTML);
+        }
+    };
+
+    localStorage.setItem("currentTab", "xml");
+
+    xmlhttp.open("GET", "action/template/xml_panel.php", true);
+    xmlhttp.setRequestHeader("Content-Type", "text/html;charset=UTF-8");
+    xmlhttp.send();
+}
 
 function createTopicGroup() {
     if (sessionStorage['user'] == undefined) {
